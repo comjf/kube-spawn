@@ -98,7 +98,7 @@ func SetDefaults_Kubernetes(cfg *ClusterConfiguration) error {
 		{Dst: "/usr/bin/socat", Src: path.Join(cacheDir, "socat")},
 	}
 
-	if cfg.DevCluster || utils.CheckVersionConstraint(cfg.KubernetesVersion, ">=1.8.0") {
+	if cfg.IsVerConstraintOrDev(">=1.8.0") {
 		cfg.TokenGroupsOption = "--groups=system:bootstrappers:kubeadm:default-node-token"
 	}
 
@@ -112,7 +112,7 @@ func SetDefaults_RuntimeConfiguration(cfg *ClusterConfiguration) error {
 
 	// NOTE: K8s 1.8 or newer fails to run by default when swap is enabled.
 	// So we should disable the feature with an option "--fail-swap-on=false".
-	if !cfg.DevCluster && utils.CheckVersionConstraint(cfg.KubernetesVersion, "<1.8.0") {
+	if !cfg.IsVerConstraintOrDev(">=1.8.0") {
 		cfg.RuntimeConfiguration.FailSwapOn = true
 	}
 
